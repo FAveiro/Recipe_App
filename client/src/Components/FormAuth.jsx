@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import { SignUpSchema, LoginSchema } from "../Validations/AuthValidation";
 
-//* Import axios and cookie
+//* Import components
 import axios from "axios";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
@@ -40,9 +40,7 @@ function FormAuth({ info, changeForm }) {
 
         if (info.value === "login") {
           const { userID, token } = response.data;
-          console.log(userID);
-          console.log(token);
-          setCookies("acess_token", token);
+          setCookies("access_token", token);
           localStorage.setItem("userID", userID);
           navigate("/");
           ToastSucess(messageLogin);
@@ -51,7 +49,11 @@ function FormAuth({ info, changeForm }) {
           ToastSucess(messageRegister);
         }
       } catch (err) {
-        setError(err.response.data.message);
+        setError(
+          err.response
+            ? err.response.data.message
+            : `Erro de servidor: ${err.code}`
+        );
       }
     },
   });

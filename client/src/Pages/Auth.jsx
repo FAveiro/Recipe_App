@@ -3,6 +3,7 @@ import React, { useState } from "react";
 //* Import components
 import CarouselFood from "../Components/Carousel";
 import FormAuth from "../Components/FormAuth";
+import Header from "../Components/Header";
 
 function Auth() {
   const [form, setForm] = useState("Login");
@@ -20,10 +21,7 @@ function Auth() {
   return (
     <div className="w-screen h-screen">
       <div className="flex flex-col h-screen">
-        <h1 className="pl-10 pt-10 text-2xl md:text-4xl lg:text-5xl font-lora font-bold text-third">
-          <span className="text-secondary">Recipe</span>
-          App
-        </h1>
+        <Header navbar={false} />
         <div className="flex flex-row px-10 justify-evenly items-center w-full h-5/6">
           <CarouselFood />
           <div className="px-5 py-2 md:p-10 rounded-md bg-third bg-opacity-30 shadow-lg shadow-third">
