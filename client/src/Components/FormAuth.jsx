@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 //* Import validation
 import { useFormik } from "formik";
@@ -11,8 +11,16 @@ import { useNavigate } from "react-router-dom";
 import { ToastSucess } from "./Toast";
 import { ToastContainer } from "react-toastify";
 
+//* Import utils
+import { CapitalizeString } from "../Utils/CapitalizeString";
+
+//* Import context
+import { UserInfomationContext } from "../Contexts/UserInfo";
+
 function FormAuth({ info, changeForm }) {
   const [error, setError] = useState("");
+
+  const { setUserInfo } = useContext(UserInfomationContext);
 
   const [_, setCookies] = useCookies("access_token");
 
@@ -40,10 +48,13 @@ function FormAuth({ info, changeForm }) {
 
         if (info.value === "login") {
           const { userID, token } = response.data;
+          const username = CapitalizeString(formik.values.username)
           setCookies("access_token", token);
           localStorage.setItem("userID", userID);
+          localStorage.setItem("username", username);
           navigate("/");
           ToastSucess(messageLogin);
+          setUserInfo(username);
         } else {
           changeForm(info.valueChangeForm);
           ToastSucess(messageRegister);

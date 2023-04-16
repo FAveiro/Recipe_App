@@ -5,11 +5,13 @@ import { useNavigate } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import { List } from "@phosphor-icons/react";
 import { useCookies } from "react-cookie";
+import { useOutSideClick } from "../Hooks/useOutSideClick";
 
 function Header({ navbar }) {
   const navigate = useNavigate();
-  
+
   const [cookies, setCookies] = useCookies(["access_token"]);
+  const ref = useOutSideClick(() => setOpenMenu(false));
 
   const isDesktopOrLaptop = useMediaQuery({
     query: "(min-width: 1224px)",
@@ -23,13 +25,8 @@ function Header({ navbar }) {
       function() {
         setCookies("access_token", "");
         localStorage.removeItem("userID");
+        localStorage.removeItem("username");
         navigate("/");
-      },
-    },
-    {
-      text: "Settings",
-      function() {
-        navigate("/settings");
       },
     },
     {
@@ -66,7 +63,10 @@ function Header({ navbar }) {
           <List size={28} color="#37373f" />
         </button>
         {openMenu && (
-          <div className="flex flex-col-reverse items-end gap-2 w-24 sm:w-28 mt-2 p-2 rounded-xl bg-third bg-opacity-50 shadow-lg">
+          <div
+            ref={ref}
+            className="flex flex-col-reverse items-end gap-2 w-24 sm:w-28 mt-2 p-2 rounded-xl bg-third bg-opacity-50 shadow-lg"
+          >
             {navbarValues.map((option, i) => (
               <button
                 onClick={() => option.function()}

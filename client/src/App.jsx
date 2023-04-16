@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./App.css";
 
 //* Router
@@ -11,20 +11,27 @@ import { useCookies } from "react-cookie";
 import Home from "./Pages/Home";
 import Auth from "./Pages/Auth";
 import Bookmarks from "./Pages/Bookmarks";
-import Settings from "./Pages/Settings";
+
+//* Context
+import { UserInfomationContext } from "./Contexts/UserInfo";
 
 function App() {
   const [cookies] = useCookies(["access_token"]);
+  const [userInfo, setUserInfo] = useState(localStorage.getItem("username"));
 
   return (
     <div>
-      <Router>
-        <Routes>
-          <Route path="/" element={cookies.access_token ? <Home /> : <Auth />} />
-          <Route path="/bookmarks" element={<Bookmarks />} />
-          <Route path="/settings" element={<Settings />} />
-        </Routes>
-      </Router>
+      <UserInfomationContext.Provider value={{ userInfo, setUserInfo }}>
+        <Router>
+          <Routes>
+            <Route
+              path="/"
+              element={cookies.access_token ? <Home /> : <Auth />}
+            />
+            <Route path="/bookmarks" element={<Bookmarks />} />
+          </Routes>
+        </Router>
+      </UserInfomationContext.Provider>
     </div>
   );
 }

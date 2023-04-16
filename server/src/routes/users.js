@@ -6,13 +6,16 @@ import { UserModel } from "../models/Users.js";
 
 const router = express.Router();
 
+//* Register
 router.post("/register", async (req, res) => {
   const { username, password } = req.body;
 
-  const user = await UserModel.findOne({ username: username });
+  const userCap = username.toLowerCase()
+
+  const user = await UserModel.findOne({ username: userCap });
 
   // Validation
-  if (!password || !username) {
+  if (!password || !userCap) {
     res.status(400);
     return res.json({ message: "Empty fields!" });
   }
@@ -21,20 +24,24 @@ router.post("/register", async (req, res) => {
     res.status(400);
     return res.json({ message: "User already exists!" });
   }
-
-  // Encrypt pw
+  
+  // Encrypt password
   const hashedPassword = await bcrypt.hash(password, 10);
 
   // Create user
-  const newUser = new UserModel({ username, password: hashedPassword });
+  const newUser = new UserModel({ username: userCap, password: hashedPassword });
   await newUser.save();
   res.status(201);
   res.json({ message: "User created!" });
 });
 
+//* Login
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
-  const user = await UserModel.findOne({ username: username });
+
+  const userCap = username.toLowerCase()
+
+  const user = await UserModel.findOne({ username: userCap });
 
   // Validation
   if (!user) {
